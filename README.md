@@ -49,8 +49,7 @@ The app will be available at: `http://localhost:3000/enroll`
 - Subject catalog by Class (subjects update dynamically)
 
 
+
 ### Author:
 Khushi | sharmakhushi1501@gmail.com
-Form step transition animations
 
-Dark/Light theme toggle
