@@ -34,10 +34,3 @@ AI was used as a debugging assistant to:
 Example Prompts:
 - **Why does my Next.js page keep redirecting back to the previous step?**
 - **What causes useEffect dependency array changed size error?**
-
-
-
-
-How can I dynamically update subjects when a class changes in React?
-
-What UX improvements can be added to a multi-step enrollment form?
