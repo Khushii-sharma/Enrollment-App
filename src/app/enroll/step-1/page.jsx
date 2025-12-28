@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,24 +28,49 @@ export default function Step1() {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6 bg-gray-50 dark:bg-zinc-900 rounded-xl shadow-sm dark:shadow-zinc-800/40"
+      >
+        {/* Progress Bar */}
         <ProgressHeader />
 
-        <FormCard title="Student Details" subtitle="Basic information">
-          <RHFInput name="fullName" label="Full Name" />
-          <RHFInput name="email" label="Email" />
-          <RHFInput name="mobile" label="Mobile Number" />
+        {/* Card */}
+        <FormCard
+          title="Student Details"
+          subtitle="Basic information about the student"
+        >
+          <RHFInput name="fullName" label="Full Name" placeholder="Enter full name" />
+          <RHFInput name="email" label="Email" placeholder="Enter email address" />
+          <RHFInput
+            name="mobile"
+            label="Mobile Number"
+            placeholder="Enter mobile number"
+          />
 
-          <RHFSelect name="class" label="Class" placeholder="Select class"
-            options={["9", "10", "11", "12"]} />
+          <RHFSelect
+            name="class"
+            label="Class"
+            placeholder="Select class"
+            options={["9", "10", "11", "12"]}
+          />
 
-          <RHFSelect name="board" label="Board" placeholder="Select board"
-            options={["CBSE", "ICSE", "State Board"]} />
+          <RHFSelect
+            name="board"
+            label="Board"
+            placeholder="Select board"
+            options={["CBSE", "ICSE", "State Board"]}
+          />
 
-          <RHFSelect name="language" label="Preferred Language"
-            options={["English", "Hindi", "Hinglish"]} />
+          <RHFSelect
+            name="language"
+            label="Preferred Language"
+            placeholder="Select language"
+            options={["English", "Hindi", "Hinglish"]}
+          />
         </FormCard>
 
+        {/* Actions */}
         <FormActions />
       </form>
     </FormProvider>
