@@ -1,33 +1,56 @@
 "use client";
-import {
-  Select, SelectTrigger, SelectValue,
-  SelectContent, SelectItem
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+
 import { useFormContext } from "react-hook-form";
 
-export default function RHFSelect({ name, label, placeholder, options }) {
-  const { setValue, watch, formState: { errors } } = useFormContext();
+export default function RHFSelect({
+  name,
+  label,
+  options = [],
+  placeholder,
+}) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-1">
-      <Label className="text-indigo-700 dark:text-indigo-400">{label}</Label>
-      <Select
-        value={watch(name)}
-        onValueChange={v => setValue(name, v, { shouldValidate: true })}
-        className="focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
+      {label && (
+        <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+          {label}
+        </label>
+      )}
+
+      <select
+        {...register(name)}
+        className="
+          w-full px-4 py-2 rounded-md
+          bg-white dark:bg-zinc-800
+          text-gray-900 dark:text-white
+          border border-gray-300 dark:border-zinc-700
+          focus:outline-none focus:ring-2
+          focus:ring-indigo-500 focus:border-indigo-500
+        "
       >
-        <SelectTrigger className="border-indigo-300 focus:border-indigo-500">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map(o => (
-            <SelectItem key={o} value={o}>{o}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        {placeholder && (
+          <option value="" className="bg-white dark:bg-zinc-800">
+            {placeholder}
+          </option>
+        )}
+
+        {options.map(option => (
+          <option
+            key={option}
+            value={option}
+            className="bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
+          >
+            {option}
+          </option>
+        ))}
+      </select>
+
       {errors[name] && (
-        <p className="text-sm text-red-500">{errors[name].message}</p>
+        <p className="text-xs text-red-500">{errors[name]?.message}</p>
       )}
     </div>
   );
