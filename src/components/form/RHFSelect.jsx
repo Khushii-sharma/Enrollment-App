@@ -38,7 +38,7 @@ export default function RHFSelect({
           </option>
         )}
 
-        {options.map(option => (
+        {options.map((option) => (
           <option
             key={option}
             value={option}
@@ -50,7 +50,9 @@ export default function RHFSelect({
       </select>
 
       {errors[name] && (
-        <p className="text-xs text-red-500">{errors[name]?.message}</p>
+        <p className="text-xs text-red-500">
+          {errors[name]?.message}
+        </p>
       )}
     </div>
   );
