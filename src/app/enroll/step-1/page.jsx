@@ -1,5 +1,4 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,61 +17,75 @@ export default function Step1() {
 
   const form = useForm({
     resolver: zodResolver(step1Schema),
-    defaultValues: formData.step1,
+    defaultValues: formData.step1 || {},
+    mode: "onChange", 
   });
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     updateStep("step1", data);
     router.push("/enroll/step-2");
   };
 
   return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6 bg-gray-50 dark:bg-zinc-900 rounded-xl shadow-sm dark:shadow-zinc-800/40"
-      >
-        {/* Progress Bar */}
-        <ProgressHeader />
+    <div className="min-h-screen bg-[#F8FAFC] py-8 md:py-20 px-4 md:px-6">
+      
+      <div className="w-full max-w-[98%] md:max-w-2xl lg:max-w-4xl mx-auto space-y-8 md:space-y-12 transition-all duration-500">
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 md:space-y-12">
+            <ProgressHeader />
 
-        {/* Card */}
-        <FormCard
-          title="Student Details"
-          subtitle="Basic information about the student"
-        >
-          <RHFInput name="fullName" label="Full Name" placeholder="Enter full name" />
-          <RHFInput name="email" label="Email" placeholder="Enter email address" />
-          <RHFInput
-            name="mobile"
-            label="Mobile Number"
-            placeholder="Enter mobile number"
-          />
+            <FormCard title="Student Details">
+              
+              <div className="flex flex-col gap-y-10 md:gap-y-14">
+                <RHFInput 
+                  name="fullName" 
+                  label="Full Name" 
+                  placeholder="Enter your full name" 
+                  required 
+                />
+                <RHFInput 
+                  name="email" 
+                  label="Email Address" 
+                  placeholder="example@domain.com" 
+                  required 
+                />
+                <RHFInput 
+                  name="mobile" 
+                  label="Mobile Number" 
+                  placeholder="Enter your mobile number" 
+                  required 
+                />
+                
+                <RHFSelect 
+                  name="class" 
+                  label="Current Class" 
+                  placeholder="Select your grade" 
+                  options={["9", "10", "11", "12"]} 
+                  required 
+                />
+                
+                <RHFSelect 
+                  name="board" 
+                  label="Educational Board" 
+                  placeholder="Select your board" 
+                  options={["CBSE", "ICSE", "State Board"]} 
+                  required 
+                />
+                
+                <RHFSelect 
+                  name="language" 
+                  label="Preferred Language" 
+                  placeholder="Select medium of instruction" 
+                  options={["English", "Hindi", "Hinglish"]} 
+                  required 
+                />
+              </div>
+            </FormCard>
 
-          <RHFSelect
-            name="class"
-            label="Class"
-            placeholder="Select class"
-            options={["9", "10", "11", "12"]}
-          />
-
-          <RHFSelect
-            name="board"
-            label="Board"
-            placeholder="Select board"
-            options={["CBSE", "ICSE", "State Board"]}
-          />
-
-          <RHFSelect
-            name="language"
-            label="Preferred Language"
-            placeholder="Select language"
-            options={["English", "Hindi", "Hinglish"]}
-          />
-        </FormCard>
-
-        {/* Actions */}
-        <FormActions />
-      </form>
-    </FormProvider>
+            <FormActions isLast={false} isSubmitting={form.formState.isSubmitting} />
+          </form>
+        </FormProvider>
+      </div>
+    </div>
   );
 }

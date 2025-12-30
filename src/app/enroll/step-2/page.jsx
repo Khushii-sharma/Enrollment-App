@@ -2,11 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { step2Schema } from "@/schemas/step2Schema";
 import { useFormData } from "@/context/FormContext";
+
 import ProgressHeader from "@/components/form/ProgressHeader";
+import FormCard from "@/components/form/FormCard";
+import FormActions from "@/components/form/FormActions";
+import RHFInput from "@/components/form/RHFInput";
+import RHFSelect from "@/components/form/RHFSelect";
 
 export default function Step2() {
   const router = useRouter();
@@ -20,105 +25,91 @@ export default function Step2() {
 
   const form = useForm({
     resolver: zodResolver(step2Schema),
-    defaultValues: formData.step2,
+    defaultValues: formData.step2 || { scholarship: false },
+    mode: "onChange",
   });
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     updateStep("step2", data);
     router.push("/enroll/step-3");
   };
 
-  const inputClass =
-    "w-full px-4 py-2 rounded-md border outline-none transition-all " +
-    "bg-white dark:bg-zinc-800 " +
-    "border-gray-300 dark:border-zinc-700 " +
-    "focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 " +
-    "text-gray-900 dark:text-white placeholder-gray-400";
-
-  const labelClass =
-    "text-sm font-medium text-gray-600 dark:text-indigo-300";
+  const isScholarshipChecked = form.watch("scholarship");
 
   return (
-    <form
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6
-                 bg-gray-50 dark:bg-zinc-900
-                 rounded-xl shadow-sm dark:shadow-zinc-800/40"
-    >
-      {/* Progress Bar */}
-      <ProgressHeader />
+    <div className="min-h-screen bg-[#F8FAFC] py-6 md:py-20 px-4 md:px-10">
+      
+      <div className="w-full max-w-full md:max-w-2xl lg:max-w-4xl mx-auto space-y-8 md:space-y-12">
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 md:space-y-14">
+            <ProgressHeader />
+            <FormCard title="Academic Details">
+              <div className="flex flex-col gap-y-10 md:gap-y-14">
+                <RHFInput 
+                  name="subjects" 
+                  label="Subjects" 
+                  placeholder="e.g. Maths, Physics, Chemistry" 
+                  required 
+                />
 
-      {/* Title */}
-      <h2 className="text-2xl sm:text-3xl font-semibold
-                     text-indigo-700 dark:text-indigo-400">
-        Academic Details
-      </h2>
+                <RHFSelect 
+                  name="goal" 
+                  label="Study Goal" 
+                  placeholder="What is your primary focus?" 
+                  options={["Board Excellence", "Concept Mastery", "Competitive Prep"]} 
+                  required 
+                />
 
-      {/* Subjects */}
-      <div>
-        <label className={labelClass}>Subjects</label>
-        <input
-          {...form.register("subjects")}
-          placeholder="Eg: Maths, Physics, Chemistry"
-          className={inputClass}
-        />
+                <RHFInput 
+                  name="hours" 
+                  type="number" 
+                  label="Weekly Study Hours" 
+                  placeholder="How many hours can you commit?"
+                  required 
+                />
+
+                <div className="pt-2 flex flex-col gap-6">
+                  <label className="flex items-center gap-4 cursor-pointer group w-fit">
+                    <div className="relative flex items-center">
+                      <input
+                        type="checkbox"
+                        {...form.register("scholarship")}
+                        className="peer w-6 h-6 opacity-0 absolute cursor-pointer z-20"
+                      />
+                      <div className="w-6 h-6 border-2 border-slate-200 rounded-md peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-300 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white scale-0 peer-checked:scale-100 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                          <path d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    </div>
+                    <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-blue-600 transition-colors">
+                      Applying for Scholarship?
+                    </span>
+                  </label>
+
+                  {isScholarshipChecked && (
+                    <div className="pt-4 md:pt-8 animate-in fade-in zoom-in-95 slide-in-from-top-4 duration-500">
+                      <RHFInput 
+                        name="percentage" 
+                        type="number" 
+                        label="Last Exam Percentage" 
+                        placeholder="Enter your score (%)" 
+                        required 
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </FormCard>
+
+            <FormActions 
+              onBack={() => router.push("/enroll/step-1")} 
+              isLast={false} 
+              isSubmitting={form.formState.isSubmitting} 
+            />
+          </form>
+        </FormProvider>
       </div>
-
-      {/* Goal */}
-      <div>
-        <label className={labelClass}>Goal</label>
-        <select {...form.register("goal")} className={inputClass}>
-          <option value="">Select Goal</option>
-          <option>Board Excellence</option>
-          <option>Concept Mastery</option>
-          <option>Competitive Prep</option>
-        </select>
-      </div>
-
-      {/* Weekly Hours */}
-      <div>
-        <label className={labelClass}>Weekly Study Hours</label>
-        <input
-          type="number"
-          {...form.register("hours", { valueAsNumber: true })}
-          placeholder="Hours per week"
-          className={inputClass}
-        />
-      </div>
-
-      {/* Scholarship */}
-      <label className="flex items-center gap-3 text-gray-700 dark:text-zinc-300">
-        <input
-          type="checkbox"
-          {...form.register("scholarship")}
-          className="w-4 h-4 accent-indigo-500"
-        />
-        Scholarship Applied?
-      </label>
-
-      {/* Scholarship Percentage */}
-      {form.watch("scholarship") && (
-        <div>
-          <label className={labelClass}>Last Exam Percentage</label>
-          <input
-            type="number"
-            {...form.register("percentage", { valueAsNumber: true })}
-            placeholder="Percentage"
-            className={inputClass}
-          />
-        </div>
-      )}
-
-      {/* Next Button */}
-      <button
-        type="submit"
-        className="w-full py-3 rounded-lg text-white font-medium
-                   bg-linear-to-r from-indigo-500 to-violet-500
-                   hover:from-indigo-600 hover:to-violet-600
-                   transition-all"
-      >
-        Next
-      </button>
-    </form>
+    </div>
   );
 }
