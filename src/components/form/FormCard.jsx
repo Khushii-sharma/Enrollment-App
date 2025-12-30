@@ -2,7 +2,7 @@
 
 export default function FormCard({ title, subtitle, children }) {
   return (
-    <div className="relative overflow-hidden rounded-4xl md:rounded-[2.5rem] bg-white border border-slate-200/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] transition-all duration-500">
+    <div className="relative overflow-hidden rounded-lg md:rounded-[2.5rem] bg-white border border-slate-200/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] transition-all duration-500">
       
       {/* High-End Top Accent Bar */}
       <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-blue-500 via-blue-600 to-indigo-600" />
